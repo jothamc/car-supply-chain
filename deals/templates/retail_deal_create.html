@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags humanize %}
+
+
+{% block title %}
+    Create Retail Deal
+{% endblock title %}
+    
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {{form|crispy}}
+
+        <div class="text-center">
+            <button class="btn btn-success w-50" type="submit">Make Deal</button>
+        </div>
+
+    </form>
+    
+{% endblock content %}
+    

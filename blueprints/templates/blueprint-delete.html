@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Delete Blueprint {{blueprint.name}}
+{% endblock title %}
+
+
+{% block content %}
+    <form method="POST">
+        <h4>Are you sure you want to delete this blueprint?</h4>
+         <h6>Name: <b>{{blueprint.name}}</b></h6>
+         <h6>Price: <b>{{blueprint.price}}</b></h6>
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+{% endblock content %}
+    
+    

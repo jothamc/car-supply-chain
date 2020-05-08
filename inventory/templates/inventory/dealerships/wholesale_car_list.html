@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+    Available Wholesale Cars
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="row no-gutters">
+        {% for car in cars %}
+        <div class="shadow-sm px-4 py-4 rounded mb-4 mr-4">
+            <p class="font-weight-bold">
+                Car: {{car}}
+            </p>
+            <p>
+                Price per car: ${{car.selling_price|intcomma}}
+            </p>
+            
+            <p>
+                Car manufacturer: {{car.manufacturer}}
+            </p>
+            <p>
+                {{car.amount}} in stock
+            </p>
+            <a href="{% url 'deals:wholesale_deal_create' car.pk %}" class="btn btn-info">Buy</a>
+        </div>
+        {% endfor %}
+    </div>
+        
+{% endblock content %}
+    

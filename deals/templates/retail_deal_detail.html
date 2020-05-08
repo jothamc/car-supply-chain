@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+
+{% block title %}
+    Retail Deal Detail
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="shadow p-4">
+        <h4>Status: {{deal.get_status_display}}</h4>
+        <p>Deal ID: {{deal.id}}</p>
+        <p>Car: {{deal.car}}</p>
+        <p>Asking Price: ${{deal.asking_price|intcomma}}</p>
+        <p>Amount: {{deal.amount}}</p>
+
+    </div>
+    
+{% endblock content %}
+    

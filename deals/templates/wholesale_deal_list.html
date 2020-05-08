@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+
+{% block title %}
+    Wholesale Deals
+{% endblock title %}
+
+
+{% block content %}
+
+{% for deal in deals %}
+<div class="shadow p-4 mb-4">
+    <h4>Status: {{deal.get_status_display}}</h4>
+    <p>Deal ID: {{deal.id}}</p>
+    <p>Dealership: <b>{{deal.dealership}}</b></p>
+    <p>Car: {{deal.car}}</p>
+    <p>Amount: {{deal.amount}}</p>
+    <p>Asking price: ${{deal.asking_price|intcomma}}</p>
+
+    
+    {% if deal.status == "PE" %}
+    <div>
+        <a href="{% url 'deals:wholesale_deal_accept' deal.pk %}" class="btn btn-success">Accept Deal</a>
+        <a href="{% url 'deals:wholesale_deal_reject' deal.pk %}" class="btn btn-danger">Reject Deal</a>
+    </div>
+    {% endif %}
+</div>
+{% empty %}
+<h3>No deals yet</h3>
+{% endfor %}
+{% endblock content %}

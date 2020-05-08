@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags  humanize %}
+
+{% block title %}Blueprint{% endblock title %}
+
+{% block content %}
+<h3>Manufacturer: {{request.user.manufacturer_set.get}}</h3>
+    <section class="row no-gutters align-items-center mt-4">
+        <p class="font-weight-bold col-5">Name</p>
+        <p class="font-weight-bold col-4">Price ($)</p>
+        <p class="font-weight-bold col-3">Actions</p>
+    {% for blueprint in blueprints %}
+        <div class="col-12 align-items-center border-bottom justify-content-between mb-2 no-gutters p-2 row">
+            <a href="{% url 'blueprints:detail' blueprint.pk %}" class="col-5">
+                {{blueprint.name}}
+            </a>
+            <span class="col-4">
+                {{blueprint.price|intcomma}} 
+            </span>
+            <div class="col-3">
+                <a class="btn btn-info" href="{% url 'blueprints:edit' blueprint.pk %}">Edit</a>
+                <a class="btn btn-danger" href="{% url 'blueprints:delete' blueprint.pk %}">Delete</a>
+            </div>
+        </div>
+    {% empty %}
+        <h4>No Blueprints yet</h4>
+    {% endfor %}
+    </section>
+    <a class="mt-4 btn btn-primary " href="{% url 'blueprints:create' %}">Create Blueprint</a>
+        
+{% endblock content %}
+    

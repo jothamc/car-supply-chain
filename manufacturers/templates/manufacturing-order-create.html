@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    Create Manufacturing Order
+{% endblock title %}
+    
+
+{% block content %}
+    <form action="{% url 'manufacturers:create' %}" method="POST">
+        {% csrf_token %}
+        {{form|crispy}}
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary w-50">Submit</button>
+        </div>
+        <div class="text-right">
+            <a href="{% url 'blueprints:create' %}">Add New Blueprint</a>
+        </div>
+    </form>
+{% endblock content %}
+    

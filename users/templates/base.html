@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%}{%endblock%} | Car Supply Chain</title>
+
+    <script src="{% static 'jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+    <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet" >
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet"> -->
+    <link href="{% static 'styles.css' %}" rel="stylesheet">
+</head>
+
+<body>
+<nav class="navbar navbar-expand navbar-light bg-light shadow-sm">
+    <div class="container">
+        <div class="w-100 order-0 ">
+            <a class="navbar-brand mx-auto" href="/">
+                Car Supply Chain
+            </a>
+        </div>
+        <div class="mx-auto order-1 w-100">
+            <ul class="navbar-nav mr-auto justify-content-center">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" id="page-title">
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="navbar-collapse w-100 order-3">
+            <ul class="navbar-nav ml-auto justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:profile' %}">
+                        {% if request.user.is_authenticated %}
+                        <i class="fa fa-user-check fa-2x"></i>
+                        Account: {{user.username}}
+                        {% else %}
+                        <i class="fa fa-user fa-2x"></i>
+                        Login
+                        {% endif %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container pt-4">
+    {% block content %}{% endblock content %}    
+</main>
+
+</body>
+
+</html>

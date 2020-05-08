@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags humanize %}
+
+
+{% block title %}
+    Create Wholesale Deal
+{% endblock title %}
+    
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {{form|crispy}}
+
+        <div class="text-center">
+            <button class="btn btn-success w-50" type="submit">Make Deal</button>
+        </div>
+
+    </form>
+    <script>
+        var initialAskingPrice = $("input[name='asking_price']").val()
+        $("input[name='amount']").change(function(event){
+            let currentValue = $(this).val()
+            // let currentAskingPrice = 
+            let newAskingPrice = currentValue * initialAskingPrice
+            $("input[name='asking_price']").val(newAskingPrice);
+
+        })
+    </script>
+{% endblock content %}
+    

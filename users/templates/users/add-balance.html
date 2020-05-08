@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags humanize %}
+
+
+{% block title %}
+    Add Balance
+{% endblock title %}
+
+
+{% block content %}
+    <div>
+        
+        {% if request.user.user_type == "MA" %}
+        <p>Manufacturer name: {{request.user.manufacturer_set.get}}</p>
+        <p>Current balance: ${{request.user.manufacturer_set.get.balance|intcomma}}</p>
+        {% elif request.user.user_type == "DE" %}
+        <p>Dealership name: {{request.user.dealership_set.get}}</p>
+        <p>Current balance: ${{request.user.dealership_set.get.balance|intcomma}}</p>
+        {% elif request.user.user_type == "CU" %}
+        <p>Customer name: {{request.user}}</p>
+        <p>Current balance: ${{request.user.balance|intcomma}}</p>
+        {% endif %}
+            
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{form|crispy}}
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary w-50">Submit</button>
+        </div>
+    </form>
+{% endblock content %}
+    

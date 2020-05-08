@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+{{car.name}} Retail Car Detail
+{% endblock title %}
+
+
+{% block content %}
+<div>
+    <p>Car: {{car.name}}</p>
+    <p>Selling price: ${{car.selling_price|intcomma}}</p>
+    <p>Cost price per car: ${{car.cost_price|intcomma}}</p>
+    <p>Total in stock: {{car.amount}}</p>
+
+    <a href="{% url 'inventory:retail_update' car.pk %}" class="btn btn-info">Edit</a>
+    <a href="{% url 'inventory:retail_delete' car.pk %}" class="btn btn-danger">Delete</a>
+</div>
+{% endblock content %}

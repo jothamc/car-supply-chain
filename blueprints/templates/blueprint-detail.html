@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+
+{% block title %}
+    {{blueprint}}
+{% endblock title %}
+
+
+{% block content %}
+    <div>
+        <p class="text-right">
+            <a class="" href="{% url 'blueprints:index' %}">View all Blueprints</a>
+        </p>
+        <p>Name: {{blueprint.name}}</p>
+        <p>Price: ${{blueprint.price|intcomma}}</p>
+        <a class="btn btn-primary" href="{% url 'blueprints:edit' blueprint.pk %}">Edit Blueprint</a>
+        <a class="btn btn-danger" href="{% url 'blueprints:delete' blueprint.pk %}">Delete Blueprint</a>
+    </div>
+{% endblock content %}
+    

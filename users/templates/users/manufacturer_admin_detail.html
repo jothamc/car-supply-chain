@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+    {{request.user}}
+{% endblock title %}
+
+
+{% block content %}
+    <div class="text-right">
+        
+        Manufacturer Admin: {{affiliation}}
+            
+        <h3>Balance: ${{affiliation.balance|intcomma}} <a href="{% url 'user:add_balance' %}" class="text-">+</a></h3>
+    </div>
+    <section class="shadow p-4">
+        <div class="mt-4">
+            <h4 class="border-bottom">Manufacturing Orders</h4>
+            <a class="btn btn-primary " href="{% url 'manufacturers:create' %}">Initiate Manufacturing Order</a>
+        </div>
+        <div class="mt-5">
+            <h4 class="border-bottom">Blueprints</h4>
+
+            <a class="btn btn-primary " href="{% url 'blueprints:create' %}">Create Blueprint</a>
+            <a class="btn btn-success" href="{% url 'blueprints:index' %}">View All Blueprints</a>
+
+        </div>
+
+        <div class="mt-5">
+            <h4 class="border-bottom">Inventory</h4>
+            <a class="btn btn-success" href="{% url 'inventory:index' %}">View Inventory</a>
+
+        </div>
+
+        <div class="mt-5">
+            <h4 class="border-bottom">Deals from Dealerships</h4>
+            <a class="btn btn-success" href="{% url 'deals:from_dealerships' %}">View Deals</a>
+
+        </div>
+    </section>
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Manufacturing Order - {{manu_order.pk}}
+{% endblock title %}
+
+
+{% block content %}
+    <div>
+        <p>
+            Manufacturing Order ID: 
+            {{manu_order.id}}
+        </p>
+        <p>
+            Manufacturing Order Blueprint: {{manu_order.car}}
+        </p>
+        <p>
+            Manufacturing Order Amount: {{manu_order.count}}
+        </p>
+    </div>
+{% endblock content %}
+    

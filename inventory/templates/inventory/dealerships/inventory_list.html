@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+    Inventory
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="row no-gutters">
+        {% for car in cars %}
+        <div class="shadow-sm px-4 py-4 rounded mb-4 mr-4">
+            <p class="font-weight-bold">
+                Car: {{car}}
+            </p>
+            <p>
+                Selling price per car: ${{car.selling_price|intcomma}}
+            </p>
+            <p>
+                Cost price per car: ${{car.cost_price|intcomma}}
+            </p>
+            <p>
+                {{car.amount}} in stock
+            </p>
+            <a href="{% url 'inventory:retail_update' car.pk %}" class="btn btn-info">Edit</a>
+            <a href="{% url 'inventory:wholesale_delete' car.pk %}" class="btn btn-danger">Delete</a>
+        </div>
+        {% endfor %}
+    </div>
+        
+{% endblock content %}
+    
