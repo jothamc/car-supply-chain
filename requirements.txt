@@ -1,4 +1,4 @@
-django-crispy-forms
 django
 gunicorn
 django-heroku
+django-crispy-forms
