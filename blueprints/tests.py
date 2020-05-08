@@ -94,8 +94,6 @@ class BlueprintManufacturerTestCase(TestCase):
             "name": "Test Model",
             "price": "30000"
         })
-        # ID 1 is self.car
-        self.assertRedirects(response, '/blueprints/2/')
         # Test for new input in response
         redirection = self.client.get(response.url)
         self.assertContains(redirection,"Name: Test Model")
@@ -109,7 +107,7 @@ class BlueprintManufacturerTestCase(TestCase):
             "name":"Best car", 
             "price":"12300",
         })
-        self.assertRedirects(response, '/blueprints/1/')
+        self.assertRedirects(response, reverse("blueprints:detail", kwargs={"pk":self.car.pk}))
         redirection = self.client.get(response.url)
         self.assertContains(redirection,"Name: Best car")
 

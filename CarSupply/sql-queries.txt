@@ -1,0 +1,6 @@
+CREATE DATABASE carsupply;
+CREATE USER carsupplyadmin WITH PASSWORD 'carSupplyPassword';
+ALTER ROLE carsupplyadmin SET client_encoding TO 'utf8';
+ALTER ROLE carsupplyadmin SET default_transaction_isolation TO 'read committed';
+ALTER ROLE carsupplyadmin SET timezone TO 'Africa/Lagos';
+GRANT ALL PRIVILEGES ON DATABASE carsupply TO carsupplyadmin;
