@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'guardian',
-    'django_extensions'
+    # 'django_extensions'
 ]
 
 MIDDLEWARE = [
