@@ -25,7 +25,7 @@ SECRET_KEY = 'zp1wkszh(qe1-_i3y%406)kkz6um#_ks*qdcue0^$rtinw36aw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["car-supply.herokuapp.com", "localhost"]
 
 
 # Application definition
