@@ -13,7 +13,7 @@ class WholesaleCar(models.Model):
     
     name = models.CharField(max_length=50, null=True)
     cost_price = models.PositiveIntegerField(default=0)
-    selling_price = models.PositiveIntegerField(default=0)
+    wholesale_price = models.PositiveIntegerField(default=0)
     amount = models.PositiveIntegerField(default=0)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE,null=True)
 
@@ -30,7 +30,7 @@ class RetailCar(models.Model):
 
     name = models.CharField(max_length=50, null=True)
     cost_price = models.PositiveIntegerField(default=0)
-    selling_price = models.PositiveIntegerField(default=0)
+    retail_price = models.PositiveIntegerField(default=0)
     amount = models.PositiveIntegerField(default=0)
     dealership = models.ForeignKey(Dealership, on_delete=models.CASCADE,null=True)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.DO_NOTHING, null=True)

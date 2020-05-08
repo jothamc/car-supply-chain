@@ -13,12 +13,15 @@ from users.permissions import UserIsManufacturer
 
 from .models import Manufacturer, ManufacturingOrder
 
+from guardian.shortcuts import assign_perm
+from guardian.mixins import PermissionRequiredMixin
+
 # Create your views here.
 
 
 class ManufacturingOrderForm(forms.ModelForm):
     """ Form definition for manufacturing order
-    
+
     Creates a form for manufacturing order showing only blueprints
     created by the manufacturer.
 
@@ -30,12 +33,12 @@ class ManufacturingOrderForm(forms.ModelForm):
 
     class Meta:
         model = ManufacturingOrder
-        fields = ("car","count")
+        fields = ("car", "count")
 
     def __init__(self, user, *args, **kwargs):
         """
         The constructor for ManufacturingOrder form
-        
+
         Parameters:
             user (obj): the current user object (request.user)
         """
@@ -79,16 +82,21 @@ class ManufacturingOrderCreateView(UserIsManufacturer, CreateView):
             form.instance.manufacturer = car.manufacturer
             manufacturing_order = form.save()
 
+            assign_perm("change_manufacturingorder",
+                        self.request.user, manufacturing_order)
+
             car.manufacturer.balance = F('balance') - total_cost
             car.manufacturer.save()
 
-            wholesale, _ = WholesaleCar.objects.update_or_create(
+            wholesale_car, _ = WholesaleCar.objects.update_or_create(
                 name=car.name,
                 cost_price=car.price,
-                selling_price=car.price,
+                wholesale_price=car.price,
                 manufacturer=car.manufacturer)
-            wholesale.amount = F('amount') + count
-            wholesale.save()
+            wholesale_car.amount = F('amount') + count
+            wholesale_car.save()
+
+            assign_perm("change_wholesalecar", self.request.user, wholesale_car)
 
             success_url = "manufacturers:mo_detail"
             return redirect(success_url, manufacturing_order.pk)
@@ -97,15 +105,12 @@ class ManufacturingOrderCreateView(UserIsManufacturer, CreateView):
             return self.form_invalid(form)
 
 
-class ManufacturingOrderDetailView(UserIsManufacturer, DetailView):
+class ManufacturingOrderDetailView(PermissionRequiredMixin, DetailView):
     """ Detail View to show Manufacturing Orders"""
 
     model = ManufacturingOrder
     template_name = "manufacturing-order-detail.html"
     context_object_name = "manu_order"
 
-    def get_object(self):
-    # Prevent non owners (manufacturers) from access
-        obj = super().get_object()
-        if obj.manufacturer != self.request.user.manufacturer_set.get():
-            raise PermissionDenied
+    permission_required = "change_manufacturingorder"
+    raise_exception = True

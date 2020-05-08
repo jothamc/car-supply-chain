@@ -14,7 +14,8 @@ from users.permissions import (UserIsCustomer, UserIsDealership,
 from .models import RetailDeal, WholesaleDeal
 
 # Create your views here.
-
+from guardian.shortcuts import assign_perm
+from guardian.mixins import PermissionRequiredMixin
 
 class WholesaleDealForm(forms.ModelForm):
 	"""Form definition for WholesaleDeal.
@@ -47,7 +48,7 @@ class WholesaleDealForm(forms.ModelForm):
 		super().__init__(*args, **kwargs)
 		car_queryset = WholesaleCar.objects.filter(pk=car_pk)
 		self.initial['car'] = car_queryset[0]
-		self.initial['asking_price'] = car_queryset[0].selling_price
+		self.initial['asking_price'] = car_queryset[0].wholesale_price
 		self.fields['car'].queryset = car_queryset
 		self.fields['amount'].widget.attrs.update({
 			"max": car_queryset[0].amount,
@@ -81,23 +82,25 @@ class WholesaleDealCreateView(UserIsDealership, CreateView):
 			form.add_error(field=None, error="Your balance is too low")
 			return self.form_invalid(form)
 
-		form.save()
+		deal = form.save()
+
+		manufacturer_admin = form.instance.car.manufacturer.admin
+		assign_perm("view_wholesaledeal", self.request.user, deal)
+		assign_perm("view_wholesaledeal", manufacturer_admin, deal)
+		assign_perm("change_wholesaledeal", manufacturer_admin, deal)
+
 		return super().form_valid(form)
 
 
-class WholesaleDealDetailView(UserIsNotCustomer, DetailView):
+class WholesaleDealDetailView(PermissionRequiredMixin, DetailView):
 	""" Detail view for wholesale deals. """
 
 	model = WholesaleDeal
 	template_name = "wholesale_deal_detail.html"
 	context_object_name = "deal"
 
-	def get_object(self):
-		deal = super().get_object()
-		user = self.request.user
-		if user != deal.dealership.admin and user != deal.car.manufacturer.admin:
-			raise PermissionDenied
-		return deal
+	permission_required = "view_wholesaledeal"
+	raise_exception = True
 
 
 class WholesaleDealListView(UserIsManufacturer, ListView):
@@ -141,7 +144,8 @@ def acceptWholesaleDeal(request, pk):
 
 	deal = WholesaleDeal.objects.get(pk=pk)
 	manufacturer = deal.car.manufacturer
-	if request.user != manufacturer.admin:
+
+	if not manufacturer.admin.has_perm("change_wholesaledeal", deal):	
 		raise PermissionDenied
 
 	total_cost = deal.asking_price
@@ -156,8 +160,8 @@ def acceptWholesaleDeal(request, pk):
 
 		retail, _ = RetailCar.objects.update_or_create(
 			name=deal.car.name,
-			cost_price=deal.car.selling_price,
-			selling_price=deal.car.selling_price,
+			cost_price=deal.car.wholesale_price,
+			retail_price=deal.car.wholesale_price,
 			manufacturer=deal.car.manufacturer,
 			dealership=deal.dealership
 		)
@@ -185,7 +189,8 @@ def rejectWholesaleDeal(request, pk):
 
 	deal = WholesaleDeal.objects.get(pk=pk)
 	manufacturer = deal.car.manufacturer
-	if request.user != manufacturer.admin:
+
+	if not manufacturer.admin.has_perm("change_wholesaledeal", deal):	
 		raise PermissionDenied
 
 	if deal.status == WholesaleDeal.PENDING:
@@ -221,7 +226,7 @@ class RetailDealForm(forms.ModelForm):
 		super().__init__(*args, **kwargs)
 		car_queryset = RetailCar.objects.filter(pk=car_pk)
 		self.initial['car'] = car_queryset[0]
-		self.initial['asking_price'] = car_queryset[0].selling_price
+		self.initial['asking_price'] = car_queryset[0].retail_price
 		self.fields['car'].queryset = car_queryset
 
 
@@ -242,22 +247,24 @@ class RetailDealCreateView(UserIsCustomer, CreateView):
 			form.add_error(field=None, error="Your balance is too low")
 			return self.form_invalid(form)
 		form.instance.customer = self.request.user
-		form.save()
+		deal = form.save()
+
+		dealership_admin = form.instance.car.dealership.admin
+		assign_perm("view_retaildeal", self.request.user, deal)
+		assign_perm("view_retaildeal", dealership_admin, deal)
+		assign_perm("change_retaildeal", dealership_admin, deal)
+
 		return super().form_valid(form)
 
 
-class RetailDealDetailView(UserIsNotManufacturer, DetailView):
+class RetailDealDetailView(PermissionRequiredMixin, DetailView):
 	""" Detail view for Retail deals. """
 	model = RetailDeal
 	template_name = "retail_deal_detail.html"
 	context_object_name = "deal"
 
-	def get_object(self):
-		deal = super().get_object()
-		user = self.request.user
-		if user != deal.car.dealership.admin and user != deal.customer:
-			UserIsNotManufacturer.handle_no_permission(self)
-		return deal
+	permission_required = "view_retaildeal"
+	raise_exception = True
 
 
 @login_required
@@ -280,9 +287,9 @@ def acceptRetailDeal(request, pk):
 
 	deal = RetailDeal.objects.get(pk=pk)
 	dealership = deal.car.dealership
-	if request.user != dealership.admin:
-		raise PermissionDenied
 
+	if not dealership.admin.has_perm("change_retaildeal", deal):
+		raise PermissionDenied
 	total_cost = deal.asking_price
 	customer_balance = deal.customer.balance
 	if deal.status == RetailDeal.PENDING and customer_balance >= total_cost:
@@ -319,9 +326,10 @@ def rejectRetailDeal(request, pk):
 
 	deal = RetailDeal.objects.get(pk=pk)
 	dealership = deal.car.dealership
-	if request.user != dealership.admin:
+	
+	if not dealership.admin.has_perm("change_retaildeal", deal):
 		raise PermissionDenied
-
+	
 	if deal.status == RetailDeal.PENDING:
 		deal.status = RetailDeal.REJECTED
 		deal.save()

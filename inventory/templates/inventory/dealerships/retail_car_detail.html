@@ -9,7 +9,7 @@
 {% block content %}
 <div>
     <p>Car: {{car.name}}</p>
-    <p>Selling price: ${{car.selling_price|intcomma}}</p>
+    <p>Selling price: ${{car.retail_price|intcomma}}</p>
     <p>Cost price per car: ${{car.cost_price|intcomma}}</p>
     <p>Total in stock: {{car.amount}}</p>
 

@@ -10,9 +10,9 @@
 {% block content %}
 <h3>Are you sure you want to delete this car?</h3>
 <p>Name: {{car}}</p>
-<p>Selling price per car: ${{car.cost_price|intcomma}}</p>
+<p>Selling price per car: ${{car.wholesale_price|intcomma}}</p>
 
-<p>Cost price per car: ${{car.selling_price|intcomma}}</p>
+<p>Cost price per car: ${{car.cost_price|intcomma}}</p>
 <p>{{car.amount}} in stock</p>
 
     <form method="POST">

@@ -7,6 +7,8 @@ from dealerships.models import Dealership
 from users.models import User
 # Create your tests here.
 
+from guardian.shortcuts import assign_perm
+
 class WholesaleCarTest(TestCase):
     """
     Tests to ascertain that manufacturer admins can access the appropriate cars
@@ -20,7 +22,7 @@ class WholesaleCarTest(TestCase):
         self.car1 = WholesaleCar.objects.create(
             name="car1",
             cost_price=2000,
-            selling_price=2000,
+            wholesale_price=2000,
             amount=12,
             manufacturer=manufacturer1,
         )
@@ -28,10 +30,11 @@ class WholesaleCarTest(TestCase):
         car2 = WholesaleCar.objects.create(
             name="car1",
             cost_price=3000,
-            selling_price=3000,
+            wholesale_price=3000,
             amount=12,
             manufacturer=manufacturer2,
         )
+        assign_perm("change_wholesalecar",admin,self.car1)
         self.client.force_login(admin)
 
 
@@ -56,7 +59,7 @@ class WholesaleCarTest(TestCase):
         self.assertEqual(response.status_code, 200)
         post_response = self.client.post(reverse("inventory:wholesale_update", kwargs={"pk": self.car1.pk}),
         data={
-            "selling_price": 4000,
+            "wholesale_price": 4000,
         })
         self.assertEqual(post_response.status_code, 302)
         new_response = self.client.get(post_response.url)
@@ -85,7 +88,7 @@ class WrongManufacturerWholesaleCarTest(TestCase):
         self.car1 = WholesaleCar.objects.create(
             name="car1",
             cost_price=2000,
-            selling_price=2000,
+            wholesale_price=2000,
             amount=12,
             manufacturer=manufacturer1,
         )
@@ -102,7 +105,7 @@ class WrongManufacturerWholesaleCarTest(TestCase):
         self.assertEqual(response.status_code, 403)
         post_response = self.client.post(reverse("inventory:wholesale_update", kwargs={"pk": self.car1.pk}),
         data={
-            "selling_price": 4000,
+            "wholesale_price": 4000,
         })
         self.assertEqual(post_response.status_code, 403)
         
@@ -127,7 +130,7 @@ class OtherUserTypesWholesaleCarTest(TestCase):
         self.car1 = WholesaleCar.objects.create(
             name="car1",
             cost_price=2000,
-            selling_price=2000,
+            wholesale_price=2000,
             amount=12,
             manufacturer=manufacturer1,
         )
@@ -198,7 +201,7 @@ class RetailCarTest(TestCase):
         self.car1 = RetailCar.objects.create(
             name="car1",
             cost_price=2000,
-            selling_price=2000,
+            retail_price=2000,
             amount=12,
             dealership=dealership1,
             manufacturer=manufacturer1,
@@ -207,11 +210,12 @@ class RetailCarTest(TestCase):
         car2 = RetailCar.objects.create(
             name="car1",
             cost_price=3000,
-            selling_price=3000,
+            retail_price=3000,
             amount=12,
             dealership=dealership2,
             manufacturer=manufacturer2,
         )
+        assign_perm("change_retailcar",admin,self.car1)
         self.client.force_login(admin)
 
 
@@ -236,7 +240,7 @@ class RetailCarTest(TestCase):
         self.assertEqual(response.status_code, 200)
         post_response = self.client.post(reverse("inventory:retail_update", kwargs={"pk": self.car1.pk}),
         data={
-            "selling_price": 4000,
+            "retail_price": 4000,
         })
         self.assertEqual(post_response.status_code, 302)
         new_response = self.client.get(post_response.url)
@@ -265,7 +269,7 @@ class WrongDealershipWholesaleCarTest(TestCase):
         self.car1 = RetailCar.objects.create(
             name="car1",
             cost_price=2000,
-            selling_price=2000,
+            retail_price=2000,
             amount=12,
             dealership=dealership1,
         )
@@ -282,7 +286,7 @@ class WrongDealershipWholesaleCarTest(TestCase):
         self.assertEqual(response.status_code, 403)
         post_response = self.client.post(reverse("inventory:retail_update", kwargs={"pk": self.car1.pk}),
         data={
-            "selling_price": 4000,
+            "retail_price": 4000,
         })
         self.assertEqual(post_response.status_code, 403)
         
@@ -307,7 +311,7 @@ class OtherUserTypesRetailCarTest(TestCase):
         self.car1 = RetailCar.objects.create(
             name="car1",
             cost_price=2000,
-            selling_price=2000,
+            retail_price=2000,
             amount=12,
             dealership=dealership1,
         )

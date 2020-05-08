@@ -79,6 +79,7 @@ class RegisterView(CreateView):
 
 	def form_valid(self, form):
 		user = form.save()
+		user.backend = 'django.contrib.auth.backends.ModelBackend'
 		login(self.request, user)
 		return redirect("user:profile")
 

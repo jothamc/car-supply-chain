@@ -2,6 +2,8 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, DetailView, ListView, UpdateView
+from guardian.mixins import PermissionRequiredMixin
+from guardian.shortcuts import assign_perm
 
 from users.permissions import (UserIsCustomer, UserIsDealership,
                                UserIsManufacturer, UserIsNotCustomer)
@@ -11,19 +13,16 @@ from .models import RetailCar, WholesaleCar
 # Create your views here.
 
 
-class WholesaleCarDetailView(UserIsManufacturer, DetailView):
+class WholesaleCarDetailView(PermissionRequiredMixin, DetailView):
     """ Detail view for Wholesale cars"""
 
     model = WholesaleCar
     template_name = "inventory/manufacturers/wholesale_car_detail.html"
     context_object_name = "car"
 
-    def get_object(self):
-        # object-level Permission
-        obj = super().get_object()
-        if self.request.user != obj.manufacturer.admin:
-            raise PermissionDenied
-        return obj
+    permission_required = "change_wholesalecar"
+    raise_exception = True
+
 
 
 class CarListView(UserIsNotCustomer, ListView):
@@ -48,22 +47,19 @@ class CarListView(UserIsNotCustomer, ListView):
             return RetailCar.objects.filter(dealership__admin=self.request.user, amount__gt=0)
 
 
-class WholesaleCarUpdateView(UserIsManufacturer, UpdateView):
+class WholesaleCarUpdateView(PermissionRequiredMixin, UpdateView):
     """ Update view for wholesale car. """
 
     model = WholesaleCar
     template_name = "inventory/manufacturers/wholesale_car_update.html"
     context_object_name = "car"
-    fields = ("selling_price",)
+    fields = ("wholesale_price",)
 
-    def get_object(self):
-        obj = super().get_object()
-        if self.request.user != obj.manufacturer.admin:
-            raise PermissionDenied
-        return obj
+    permission_required = "change_wholesalecar"
+    raise_exception = True
 
 
-class WholesaleCarDeleteView(UserIsManufacturer, DeleteView):
+class WholesaleCarDeleteView(PermissionRequiredMixin, DeleteView):
     """ Delete view for wholesale car. """
 
     model = WholesaleCar
@@ -71,11 +67,8 @@ class WholesaleCarDeleteView(UserIsManufacturer, DeleteView):
     context_object_name = "car"
     success_url = reverse_lazy("inventory:index")
 
-    def get_object(self):
-        obj = super().get_object()
-        if self.request.user != obj.manufacturer.admin:
-            raise PermissionDenied
-        return obj
+    permission_required = "change_wholesalecar"
+    raise_exception = True
 
 
 class AllWholesaleCarListView(UserIsDealership, ListView):
@@ -98,36 +91,30 @@ class AllRetailCarListView(UserIsCustomer, ListView):
         return RetailCar.objects.filter(amount__gt=0)
 
 
-class RetailCarDetailView(UserIsDealership, DetailView):
+class RetailCarDetailView(PermissionRequiredMixin, DetailView):
     """ Detail view for retail cars. """
 
     model = RetailCar
     template_name = "inventory/dealerships/retail_car_detail.html"
     context_object_name = "car"
 
-    def get_object(self):
-        obj = super().get_object()
-        if self.request.user != obj.dealership.admin:
-            raise PermissionDenied
-        return obj
+    permission_required = "change_retailcar"
+    raise_exception = True
 
 
-class RetailCarUpdateView(UserIsDealership, UpdateView):
+class RetailCarUpdateView(PermissionRequiredMixin, UpdateView):
     """ Update view for retail cars. """
 
     model = RetailCar
     template_name = "inventory/dealerships/retail_car_update.html"
     context_object_name = "car"
-    fields = ("selling_price",)
+    fields = ("retail_price",)
 
-    def get_object(self):
-        obj = super().get_object()
-        if self.request.user != obj.dealership.admin:
-            raise PermissionDenied
-        return obj
+    permission_required = "change_retailcar"
+    raise_exception = True
 
 
-class RetailCarDeleteView(UserIsDealership, DeleteView):
+class RetailCarDeleteView(PermissionRequiredMixin, DeleteView):
     """ Delete view for retail cars. """
     
     model = RetailCar
@@ -135,8 +122,5 @@ class RetailCarDeleteView(UserIsDealership, DeleteView):
     context_object_name = "car"
     success_url = reverse_lazy("inventory:index")
 
-    def get_object(self):
-        obj = super().get_object()
-        if self.request.user != obj.dealership.admin:
-            raise PermissionDenied
-        return obj
+    permission_required = "change_retailcar"
+    raise_exception = True

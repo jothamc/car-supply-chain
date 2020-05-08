@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'zp1wkszh(qe1-_i3y%406)kkz6um#_ks*qdcue0^$rtinw36aw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["car-supply.herokuapp.com", "localhost"]
 
@@ -48,7 +48,10 @@ INSTALLED_APPS = [
 
 
     'crispy_forms',
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+
+    'guardian',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -160,3 +163,8 @@ LOGIN_URL = '/user/login/'
 LOGIN_REDIRECT_URL = '/user/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+]

@@ -4,6 +4,7 @@ from users.models import User
 from manufacturers.models import Manufacturer
 from .models import Car
 
+from guardian.shortcuts import assign_perm
 # Create your tests here.
 class BlueprintCustomerTestCase(TestCase):
 
@@ -83,6 +84,7 @@ class BlueprintManufacturerTestCase(TestCase):
             name="NaijaManufacturer", admin=self.user,country="NG"
         )
         self.car = Car.objects.create(name="nice", price=10000, manufacturer=self.manufacturer )
+        assign_perm("change_car", self.user, self.car)
         self.client.force_login(self.user)
         super().setUp()
 
