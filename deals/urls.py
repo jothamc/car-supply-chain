@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (WholesaleDealCreateView, WholesaleDealDetailView, WholesaleDealListView, 
 acceptWholesaleDeal, rejectWholesaleDeal, RetailDealCreateView, RetailDealDetailView, RetailDealListView,
-acceptRetailDeal, rejectRetailDeal)
+acceptRetailDeal, rejectRetailDeal, ToDealershipsListView, ToManufacturersListView)
 
 app_name = "deals"
 urlpatterns = [
@@ -15,4 +15,7 @@ urlpatterns = [
     path('from-customers/', RetailDealListView.as_view(), name='from_customers'),
     path('from-customers/<pk>/accept/', acceptRetailDeal, name='retail_deal_accept'),
     path('from-customers/<pk>/reject/', rejectRetailDeal, name='retail_deal_reject'),
+
+    path('to-dealerships/', ToDealershipsListView.as_view(), name='to_dealerships'),
+    path('to-manufacturers/', ToManufacturersListView.as_view(), name='to_manufacturers'),
 ]

@@ -6,9 +6,8 @@ from django.db import models
 class Car(models.Model):
     name = models.CharField(max_length=30)
     price = models.IntegerField()
-    manufacturer = models.ForeignKey('manufacturers.Manufacturer', on_delete=models.SET_NULL, null=True )
-    wholesale = models.BooleanField(default=False)
-
+    manufacturer = models.ForeignKey('manufacturers.Manufacturer', on_delete=models.CASCADE, null=True )
+    
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('blueprints:detail', kwargs={'pk': self.pk})

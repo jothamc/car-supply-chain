@@ -17,6 +17,7 @@ class WholesaleCar(models.Model):
     amount = models.PositiveIntegerField(default=0)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE,null=True)
 
+
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('inventory:wholesale_detail', kwargs={'pk': self.pk})

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+
+{% block title %}
+My Deals to Dealerships
+{% endblock title %}
+
+
+{% block content %}
+
+{% for deal in deals %}
+<div class="shadow p-4 mb-4">
+    <h4>Status: {{deal.get_status_display}}</h4>
+    <p>Deal ID: {{deal.id}}</p>
+    <p>Dealership: <b>{{deal.dealership}}</b></p>
+    <p>Car: {{deal.car}}</p>
+    <p>Amount: {{deal.amount}}</p>
+    <p>Asking Price: ${{deal.asking_price|intcomma}}</p>
+
+</div>
+{% empty %}
+<h3>No deals yet</h3>
+{% endfor %}
+{% endblock content %}

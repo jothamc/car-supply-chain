@@ -76,6 +76,7 @@ class AllWholesaleCarListView(UserIsDealership, ListView):
 
     template_name = "inventory/dealerships/wholesale_car_list.html"
     context_object_name = "cars"
+    paginate_by = 52
 
     def get_queryset(self):
         return WholesaleCar.objects.filter(amount__gt=0)
@@ -86,6 +87,7 @@ class AllRetailCarListView(UserIsCustomer, ListView):
 
     template_name = "inventory/customers/retail_car_list.html"
     context_object_name = "cars"
+    paginate_by = 52
 
     def get_queryset(self):
         return RetailCar.objects.filter(amount__gt=0)

@@ -29,6 +29,7 @@ class WholesaleDeal(models.Model):
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse("deals:wholesale_deal_detail", kwargs={"pk":self.pk})
+    
 
 
 class RetailDeal(models.Model):

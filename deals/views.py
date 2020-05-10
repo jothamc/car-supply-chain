@@ -335,3 +335,22 @@ def rejectRetailDeal(request, pk):
 		deal.save()
 
 	return redirect("deals:retail_deal_detail", pk)
+
+
+
+
+class ToManufacturersListView(UserIsDealership,ListView):
+	model = WholesaleDeal
+	template_name = "to_manufacturers.html"
+	context_object_name = "deals"
+
+	def get_queryset(self):
+		return WholesaleDeal.objects.filter(dealership__admin=self.request.user)
+
+class ToDealershipsListView(UserIsCustomer,ListView):
+	model = RetailDeal
+	template_name = "to_dealerships.html"
+	context_object_name = "deals"
+
+	def get_queryset(self):
+		return RetailDeal.objects.filter(customer=self.request.user)
