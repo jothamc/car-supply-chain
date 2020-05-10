@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from users.views import HomeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,4 +24,5 @@ urlpatterns = [
     path('blueprints/',include("blueprints.urls")),
     path('deals/',include("deals.urls")),
     path('inventory/',include("inventory.urls")),
+    path('', HomeView.as_view(), name='home'),
 ]

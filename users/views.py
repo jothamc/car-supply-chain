@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, TemplateView
 
 from dealerships.models import Dealership
 from manufacturers.models import Manufacturer
@@ -176,3 +176,8 @@ def AddBalanceView(request):
 	else:
 		form = chooseUserForm(user_type)
 		return render(request, template_name, {"form": form})
+
+
+
+class HomeView(TemplateView):
+	template_name = "home.html"
