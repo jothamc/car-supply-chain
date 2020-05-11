@@ -7,6 +7,8 @@ from inventory.models import WholesaleCar
 from users.models import User
 from dealerships.models import Dealership
 
+from guardian.shortcuts import assign_perm
+
 with open("countries-django.json") as file:
     countries = json.loads(file.read())
 
@@ -21,7 +23,7 @@ def populate_cars(initial=True):
         country = random.choice(countries)[0]
 
         if initial:
-            username = f"{brand.lower()}_admin".replace(" ","_")
+            username = f"{brand}_admin".lower().replace(" ","_").replace("-","_")
             manufacturer_admin = User(
                 username=username, user_type=User.MANUFACTURER)
 
@@ -43,11 +45,14 @@ def populate_cars(initial=True):
             price = round(random.random() * 100) * 1000
             # name = f"{brand} {model}"
 
-            Car.objects.create(name=model, price=price,
+            car = Car.objects.create(name=model, price=price,
                                manufacturer=manufacturer)
             amount = price/1000
-            WholesaleCar.objects.create(
+            w_car = WholesaleCar.objects.create(
                 name=model, wholesale_price=price, cost_price=price, amount=amount, manufacturer=manufacturer)
+
+            assign_perm("change_car", manufacturer.admin, car)
+            assign_perm("change_wholesalecar", manufacturer.admin, w_car)
 
 
 def populate_dealerships():

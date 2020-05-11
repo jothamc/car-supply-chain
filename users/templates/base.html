@@ -45,13 +45,20 @@
                     <a class="nav-link" href="{% url 'user:profile' %}">
                         {% if request.user.is_authenticated %}
                         <i class="fa fa-user-check fa-2x"></i>
-                        Account: {{user.username}}
+                        Dashboard: {{user.username}}
                         {% else %}
                         <i class="fa fa-user fa-2x"></i>
                         Login
                         {% endif %}
                     </a>
                 </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:logout' %}">
+                        Logout
+                    </a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>
