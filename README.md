@@ -46,3 +46,28 @@ to start the development server.
 Open http://localhost:8000/ to access the user.
 
 The app is also online on https://car-supply.herokuapp.com.
+
+If you ran the code to populate the database, a list of common car manufacturers has been uploaded to the database. 
+Examples:
+
+
+| Manufacturer | Manufacturer Admin Username | Manufacturer Admin Password |
+| -------- | ----------- | ----------|
+| Acura | acura_admin | admin |
+| Buick | buick_admin | admin |
+| Toyota | toyota_admin | admin|
+| Volvo | volvo_admin | admin |
+
+A list of a few made-up dealerships have been added too. Examples:
+
+
+| Dealership | Dealership Admin Username | Manufacturer Admin Password |
+| -------- | ----------- | ----------|
+| Smith Motors | smith_admin | admin |
+| Jessica Motors | jessica_admin | admin |
+| Jackson Motors | jackson_admin | admin|
+| Andrew Motors | andrew_admin | admin |
+
+A full list can be seen in the admin panel.
+
+One customer was created with username and password "customer".
